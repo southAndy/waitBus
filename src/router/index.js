@@ -9,6 +9,11 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
+    {
+      path: "/NearbyStation",
+      name: "NearbyStation",
+      component: () => import("@/views/NearbyStation.vue"),
+    },
   ],
 });
 
