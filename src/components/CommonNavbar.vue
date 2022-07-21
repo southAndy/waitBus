@@ -3,6 +3,7 @@
     <div class="navbar_previous" @click="toPrevious">
       <img src="@/assets/images/icon/arror.png" alt="上一頁" />
     </div>
+    <!-- 以slot的方式根據不同頁面接收不同內容 -->
     <slot></slot>
   </nav>
 </template>

@@ -33,37 +33,24 @@
 
 <script>
 // @ is an alias to /src
-import busApi from "@/service/getBusApi";
-import { ref, onMounted } from "vue";
-import axios from "axios";
-import qs from "qs";
+// import busApi from "@/service/getBusApi";
+import { getToken } from "@/service/getToken";
+import getNearStation from "@/store/Bus/getNearStation";
+import {
+  ref,
+  // onMounted
+} from "vue";
 
 export default {
   name: "HomeView",
   components: {},
   setup() {
-    //? 拿token
-    const data = {
-      grant_type: "client_credentials",
-      client_id: "andyzeng900-3950bacb-5ef6-4a32",
-      client_secret: "0a03591c-1c99-4e35-ac85-565609701952",
-    };
-    let config = {
-      method: "post",
-      url: "https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      //!無法轉換request的body內容,有些值在url有別的意思,ex:%
-      //?解決方法:axios官方:https://axios-http.com/docs/urlencoded,透過qs套件幫忙轉換,篩選
-      data: qs.stringify(data),
-    };
-    axios(config)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => console.log("error!", error));
-
+    //引入pinia
+    const store = getNearStation();
+    console.log(store);
+    store.getToken();
+    console.log(store.apiToken);
+    // quasar item
     let first = ref(true);
     let cityList = ref([
       "台北市",
@@ -76,18 +63,18 @@ export default {
       "已儲存路線",
     ]);
     let list = ref([]);
-    //get api
-    onMounted(async () => {
-      list.value = await busApi.route.testAPI().then((response) => {
-        console.log(response);
-        return response.data;
-      });
-    });
-    console.log("hello");
-    console.log(list);
+    let token = () => async () => {
+      await getToken;
+      console.log(getToken.access_token);
+      return getToken.access_token;
+    };
+    //token 給 pinia
+
     return {
       first,
       cityList,
+      list,
+      token,
     };
   },
 };
