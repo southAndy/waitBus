@@ -14,6 +14,12 @@ const router = createRouter({
       name: "NearbyStation",
       component: () => import("@/views/NearbyStation.vue"),
     },
+    {
+      path: "/BusRoute",
+      name: "BusRoute",
+      props: true,
+      component: () => import("@/views/BusRoute.vue"),
+    },
   ],
 });
 

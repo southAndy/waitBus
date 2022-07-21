@@ -28,6 +28,7 @@
           :to="{ name: 'BusRoute' }"
           v-for="city in cityList"
           :key="city"
+          :city="city"
           >{{ city }}</router-link
         >
       </div>

@@ -21,6 +21,7 @@ function toPrevious() {
   align-items: center;
   gap: 10px;
   height: 55px;
+  padding: 0 15px;
 
   font-size: 21px;
   color: white;
