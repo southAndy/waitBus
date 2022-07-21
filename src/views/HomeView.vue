@@ -22,9 +22,14 @@
       </div>
     </div>
     <footer class="home_select">
-      <h3>查詢公車</h3>
+      <h3>查詢公車路線</h3>
       <div class="home_select-items">
-        <div v-for="city in cityList" :key="city">{{ city }}</div>
+        <router-link
+          :to="{ name: 'BusRoute' }"
+          v-for="city in cityList"
+          :key="city"
+          >{{ city }}</router-link
+        >
       </div>
     </footer>
   </section>
@@ -47,9 +52,7 @@ export default {
   setup() {
     //引入pinia
     const store = getNearStation();
-    console.log(store);
     store.getToken();
-    console.log(store.apiToken);
     // quasar item
     let first = ref(true);
     let cityList = ref([
@@ -65,7 +68,6 @@ export default {
     let list = ref([]);
     let token = () => async () => {
       await getToken;
-      console.log(getToken.access_token);
       return getToken.access_token;
     };
     //token 給 pinia
@@ -158,9 +160,9 @@ export default {
       display: grid;
       grid-template-columns: 25% 25% 25% 25%;
       grid-template-rows: 78px 78px;
-      gap: 5px;
+      gap: 4px;
 
-      div {
+      a {
         display: flex;
         align-items: center;
         justify-content: center;

@@ -27,18 +27,18 @@ const busAPI = axios.create({
 //? output API
 export default {
   station: {
-    getSpecificRange(lat, lng, distance = 300) {
+    getSpecificRange(lat, lng, distance = 500) {
       console.log("現在經緯", lat, lng);
       //tdx.transportdata.tw/api/advanced/v2/Bus/Stop/NearBy?%24top=30&%24spatialFilter=nearby%2822.999459%2C%20120.2129118%2C800%29&%24format=JSON
       console.log(
-        `Stop/NearBy?%24top=100&%24spatialFilter=nearby%28${lat}%2C%20${lng}%2C${distance}%29&%24format=JSON`
+        `Stop/NearBy?%24top=500&%24spatialFilter=nearby%28${lat}%2C%20${lng}%2C${distance}%29&%24format=JSON`
       );
       //原始寫法
       // return busAPI.get(
       //   `/Stop/NearBy?%24top=100&%24spatialFilter=nearby%28${lat}%2C%20${lng}%2C${distance}%29&%24format=JSON`
       // );
       return busAPI.get(
-        `/Stop/NearBy?%24top=30&%24spatialFilter=nearby%2822.999459%2C%20120.2129118%2C800%29&%24format=JSON`
+        `/Stop/NearBy?%24top=500&%24spatialFilter=nearby%2822.999459%2C%20120.2129118%2C800%29&%24format=JSON`
       );
       // return busAPI.get("Stop/NearBy", {
       //   params: {

@@ -27,7 +27,7 @@ const nearbyStore = defineStore("nearbyStore", {
   actions: {
     async getToken() {
       this.apiToken = await getToken;
-      console.log(this.apiToken);
+      console.log("get token", this.apiToken);
     },
     async getNearStation() {
       await this.getToken();

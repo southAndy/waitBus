@@ -67,17 +67,44 @@ export default {
 
       //發API
       console.log(getBusApi);
-      getBusApi.station
-        .getSpecificRange(userPosition.value.lat, userPosition.value.lng)
-        .then((response) => {
-          console.log(response.data);
-          apiCollection.value = response.data;
-          return response;
+      async function create() {
+        let list = [];
+        await getBusApi.station
+          .getSpecificRange(userPosition.value.lat, userPosition.value.lng)
+          .then((response) => {
+            list.push(response.data);
+            return response;
+          });
+        console.log(list);
+        //製作站牌座標
+        let markers = [];
+        //todo
+        list[0].forEach((data) => {
+          markers.push(
+            leaflet
+              .marker(
+                [data.StopPosition.PositionLat, data.StopPosition.PositionLon],
+                { icon: store.busIcon }
+              )
+              .bindPopup("testing")
+          );
         });
-      //製作站牌座標
-      // let markerCollection = apiCollection.value.map((data,index)=>{
-      //   return leaflet.marker([data.,data.],{icon:busIcon})
-      // })
+        console.log(markers);
+
+        //添加事件
+        let markerGroup = leaflet
+          .featureGroup(markers)
+          .addTo(mapInstance.value)
+          .on("popupopen", (e) => {
+            e.layer.setIcon(store.pointedBusIcon);
+            console.log(e);
+            //todo 點擊觸發站牌api
+          })
+          .on("popupclose", (e) => e.layer.setIcon(store.busIcon));
+        return markerGroup;
+      }
+      create();
+
       //一次添加
       leaflet
         .featureGroup(apiCollection.value)
