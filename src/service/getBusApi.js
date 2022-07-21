@@ -1,20 +1,54 @@
 import axios from "axios";
-import {
-  // getToken,
-  backupToken,
-} from "./getToken";
+import { getToken } from "./getToken";
+
+async function accessToken() {
+  let token = await getToken;
+  return token.access_token;
+}
+let token = accessToken();
+console.log("", token);
+
+let diedToken =
+  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NTg0NTQxNTcsImlhdCI6MTY1ODM2Nzc1NywianRpIjoiMjhhMzI5YTYtYTJlNy00YTkzLTg4NTctNWE1ZTdkYjc1ODFlIiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.CvBZv4wQK_W5NP5et-hPFg9Czlz-WwI_lNXOiy5XuHoNW3HrSkimFzsg3k04-kH9h9uUKIuD3GErTNd8WLTTTlWY-SHaI0JuKfQgTx74ln79yRd4srTZ_iziyX6ZZrYdNWaX4uX9acMVlVvlHW-zbS94dFzrBRhVMX3bO6Bz7ZNHxN1QSMUIQIb69Zb9USgoPmlc0aRrTvPJj-7e99kj9EEHyX4C5GpuwCwgVVwqbnobPuotzU4DVFfM6hahd0JLEMcr2nfxjdmeh9uPAAgnjcyzMjyU18TmVmq_K7mJjFoH7KECjeQLobABM6Bv8IW06ygR_W9qdqGxHTI81rVrNg";
+
 const busAPI = axios.create({
-  baseURL: "https://tdx.transportdata.tw/api/basic/v2/Bus",
+  baseURL: "https://tdx.transportdata.tw/api/advanced/v2/Bus",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
-    //加密函式
+
+    //API認證token
+    //todo token 產生速度太慢,axios實例拿不到 -- promise / callback
+    Authorization: `Bearer ${diedToken}`,
+    //舊版加密函式
     // ...getAuthorizationHeader(),
-    Authorization: `Bearer ${backupToken}`,
   },
 });
 //? output API
 export default {
+  station: {
+    getSpecificRange(lat, lng, distance = 300) {
+      console.log("現在經緯", lat, lng);
+      //tdx.transportdata.tw/api/advanced/v2/Bus/Stop/NearBy?%24top=30&%24spatialFilter=nearby%2822.999459%2C%20120.2129118%2C800%29&%24format=JSON
+      console.log(
+        `Stop/NearBy?%24top=100&%24spatialFilter=nearby%28${lat}%2C%20${lng}%2C${distance}%29&%24format=JSON`
+      );
+      //原始寫法
+      // return busAPI.get(
+      //   `/Stop/NearBy?%24top=100&%24spatialFilter=nearby%28${lat}%2C%20${lng}%2C${distance}%29&%24format=JSON`
+      // );
+      return busAPI.get(
+        `/Stop/NearBy?%24top=30&%24spatialFilter=nearby%2822.999459%2C%20120.2129118%2C800%29&%24format=JSON`
+      );
+      // return busAPI.get("Stop/NearBy", {
+      //   params: {
+      //     $spatialFilter: `nearby(${lat},${lng},${distance})`,
+      //     $top: 200,
+      //     $format: JSON,
+      //   },
+      // });
+    },
+  },
   route: {
     testAPI() {
       return busAPI.get("StopOfRoute/City/Taipei", {
