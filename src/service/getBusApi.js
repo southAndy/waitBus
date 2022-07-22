@@ -9,10 +9,23 @@ let token = accessToken();
 console.log("", token);
 
 let diedToken =
-  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NTg0NTQxNTcsImlhdCI6MTY1ODM2Nzc1NywianRpIjoiMjhhMzI5YTYtYTJlNy00YTkzLTg4NTctNWE1ZTdkYjc1ODFlIiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.CvBZv4wQK_W5NP5et-hPFg9Czlz-WwI_lNXOiy5XuHoNW3HrSkimFzsg3k04-kH9h9uUKIuD3GErTNd8WLTTTlWY-SHaI0JuKfQgTx74ln79yRd4srTZ_iziyX6ZZrYdNWaX4uX9acMVlVvlHW-zbS94dFzrBRhVMX3bO6Bz7ZNHxN1QSMUIQIb69Zb9USgoPmlc0aRrTvPJj-7e99kj9EEHyX4C5GpuwCwgVVwqbnobPuotzU4DVFfM6hahd0JLEMcr2nfxjdmeh9uPAAgnjcyzMjyU18TmVmq_K7mJjFoH7KECjeQLobABM6Bv8IW06ygR_W9qdqGxHTI81rVrNg";
+  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NTg1NDA3OTEsImlhdCI6MTY1ODQ1NDM5MSwianRpIjoiZmNmNzZkMmItODY1My00ZmFjLWI2NTAtMGRlOTc3NTI3NDhmIiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.RVhis3BKGFJbZw3owirmlWSGnMOqHgt6j9EzkYPIOW_7sMP7ssNumdN7oIHEzdAz7KNk4a1XwRkscelXyVBA1Im-uNyA2klZmb5Ku-0CyQkHtTybT51tT_zKnz2RGLbSx-dtIvduQ-D8nHIFCrjhuvdbjl1RsxcavnIX2ZikfX5UjPHdAUoGtmIR7sjKmzD6T9s87yoMPR6LdWJu2r5gQxAmPL_VmfI8mdmhofYLrmfn6NMXk2hLdiczvj_VSR7k0B77HE8iSfdu9j0mIylh8R_Fr94YPYbnzr64faJhXOMXi9ByGwLDNohY5Gkwl3Ft1H7zkoHZyHe2Q4MzvMKrrg";
 
-const busAPI = axios.create({
+const busAdvancedAPI = axios.create({
   baseURL: "https://tdx.transportdata.tw/api/advanced/v2/Bus",
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+
+    //API認證token
+    //todo token 產生速度太慢,axios實例拿不到 -- promise / callback
+    Authorization: `Bearer ${diedToken}`,
+    //舊版加密函式
+    // ...getAuthorizationHeader(),
+  },
+});
+const busAPI = axios.create({
+  baseURL: "https://tdx.transportdata.tw/api/basic/v2/Bus",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -37,7 +50,7 @@ export default {
       // return busAPI.get(
       //   `/Stop/NearBy?%24top=100&%24spatialFilter=nearby%28${lat}%2C%20${lng}%2C${distance}%29&%24format=JSON`
       // );
-      return busAPI.get(
+      return busAdvancedAPI.get(
         `/Stop/NearBy?%24top=500&%24spatialFilter=nearby%2822.999459%2C%20120.2129118%2C800%29&%24format=JSON`
       );
       // return busAPI.get("Stop/NearBy", {
@@ -50,13 +63,15 @@ export default {
     },
   },
   route: {
-    testAPI() {
-      return busAPI.get("StopOfRoute/City/Taipei", {
-        params: {
-          $top: 30,
-          $format: JSON,
-        },
-      });
+    getSpecificCity(cityName) {
+      // return busAPI.get("StopOfRoute/City/Taipei", {
+      //   // params: {
+      //   //   $top: 30,
+      //   //   $format: JSON,
+      //   // },
+      // });
+      return busAPI.get(`Route/City/${cityName}?%24top=500&%24format=JSON
+      `);
     },
   },
   city: {},

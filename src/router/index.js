@@ -15,7 +15,7 @@ const router = createRouter({
       component: () => import("@/views/NearbyStation.vue"),
     },
     {
-      path: "/BusRoute",
+      path: "/:City/BusRoute",
       name: "BusRoute",
       props: true,
       component: () => import("@/views/BusRoute.vue"),

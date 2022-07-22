@@ -1,52 +1,70 @@
 <template>
-  <common-navbar-vue>
-    <input
-      @input="searchBus"
-      class="search_input"
-      type="text"
-      :placeholder="inputHolder"
-    />
-  </common-navbar-vue>
-  <section class="search_content">
-    <h3>{{ title }}</h3>
-    <div class="search_card" v-for="station in 2" :key="station">
-      <div>
-        <h4>{{ "236" }}</h4>
-        <span>{{ "新莊" }} - {{ "國父紀念館" }}</span>
+  <section>
+    <common-navbar-vue>
+      <input
+        @change="searchBusRoute"
+        class="search_input"
+        type="text"
+        :placeholder="inputHolder"
+      />
+    </common-navbar-vue>
+    <section class="search_content">
+      <h3>{{ title }}</h3>
+      <div
+        class="search_card"
+        v-for="station in apiCollection[0]"
+        :key="station"
+      >
+        <div>
+          <h4>{{ station.RouteName.Zh_tw }}</h4>
+          <span
+            >{{ station.DepartureStopNameZh }} -
+            {{ station.DestinationStopNameZh }}</span
+          >
+        </div>
+        <div>
+          <img src="@/assets/images/icon/Vector-like.png" alt="收藏按鈕" />
+        </div>
       </div>
-      <div>
-        <img src="@/assets/images/icon/Vector-like.png" alt="收藏按鈕" />
-      </div>
+    </section>
+    <div class="search_keyboard">
+      <div v-for="button in 20" :key="button" @click="getUserPress">紅</div>
     </div>
   </section>
-  <div class="search_keyboard">
-    <div v-for="button in 20" :key="button" @click="getUserPress">紅</div>
-  </div>
 </template>
 <script>
 import CommonNavbarVue from "@/components/CommonNavbar.vue";
-// import { ref } from "vue";
+import getBusApi from "@/service/getBusApi";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 export default {
   components: { CommonNavbarVue },
   props: { city: String },
   setup(props) {
-    function searchBus() {
-      console.log("search");
+    let router = useRoute();
+    console.log(router.params.City);
+    let apiCollection = ref([]);
+    function searchBusRoute() {
+      //將params作為參數
+      getBusApi.route.getSpecificCity(router.params.City).then((response) => {
+        apiCollection.value.push(response.data);
+      });
+      console.log(apiCollection);
     }
-    console.log(props);
-    let inputHolder = `${props.city}公車查詢`;
-    let title = `${props.city}中已存路線`;
+    let inputHolder = `${router.params.City}公車查詢`;
+    let title = `${router.params.City}中已存路線`;
 
     function getUserPress() {
       console.log("word");
     }
 
     return {
-      searchBus,
+      searchBusRoute,
       props,
       inputHolder,
       title,
       getUserPress,
+      apiCollection,
     };
   },
 };
