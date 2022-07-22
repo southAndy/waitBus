@@ -25,16 +25,14 @@
       <h3>查詢公車路線</h3>
       <div class="home_select-items">
         <router-link
-          :to="{ name: 'BusRoute' }"
+          :to="{ name: 'BusRoute', params: { City: city.en } }"
           v-for="city in cityList"
           :key="city"
-          :city="city"
-          >{{ city }}</router-link
-        >
+          >{{ city.zh }}
+        </router-link>
       </div>
     </footer>
   </section>
-  <!-- <pre>{{ testAPI }}</pre> -->
 </template>
 
 <script>
@@ -56,15 +54,16 @@ export default {
     store.getToken();
     // quasar item
     let first = ref(true);
+
     let cityList = ref([
-      "台北市",
-      "桃園市",
-      "台中市",
-      "臺南市",
-      "高雄市",
-      "公路客運",
-      "其他",
-      "已儲存路線",
+      { zh: "台北市", en: "Taipei" },
+      { zh: "新北市", en: "NewTaipei" },
+      { zh: "桃園市", en: "Taoyuan" },
+      { zh: "台中市", en: "Taichung" },
+      { zh: "臺南市", en: "Tainan" },
+      { zh: "高雄市", en: "kaohsiung" },
+      { zh: "公路客運", en: "Taipei" },
+      { zh: "已儲存路線", en: "Taipei" },
     ]);
     let list = ref([]);
     let token = () => async () => {
