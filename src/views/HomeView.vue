@@ -121,7 +121,7 @@ export default {
     gap: 10px;
     //位置
     position: absolute;
-    top: 50%;
+    top: 55%;
     right: 0;
     left: 0;
     &-item {
@@ -148,7 +148,7 @@ export default {
   }
   &_select {
     position: absolute;
-    bottom: 15%;
+    bottom: 5%;
     margin-top: 24px;
 
     h3 {

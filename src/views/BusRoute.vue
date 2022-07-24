@@ -10,9 +10,10 @@
     </common-navbar-vue>
     <section class="search_content">
       <h3>{{ title }}</h3>
-      <div
+      <router-link
+        :to="{ name: 'StationDeatil', params: { UID: station.RouteUID } }"
         class="search_card"
-        v-for="station in apiCollection[0]"
+        v-for="station in apiCollection"
         :key="station"
       >
         <div>
@@ -22,13 +23,21 @@
             {{ station.DestinationStopNameZh }}</span
           >
         </div>
-        <div>
-          <img src="@/assets/images/icon/Vector-like.png" alt="收藏按鈕" />
+        <div @click="storeBusRoute(station.RouteUID)">
+          <font-awesome-icon
+            icon="fa-solid fa-heart"
+            :class="[
+              { stored: isStoreRoute === station.RouteUID },
+              'search_store',
+            ]"
+          />
         </div>
-      </div>
+      </router-link>
     </section>
     <div class="search_keyboard">
-      <div v-for="button in 20" :key="button" @click="getUserPress">紅</div>
+      <div v-for="item in keyboard" :key="item" @click="getUserPress">
+        {{ item.key }}
+      </div>
     </div>
   </section>
 </template>
@@ -42,29 +51,65 @@ export default {
   props: { city: String },
   setup(props) {
     let router = useRoute();
-    console.log(router.params.City);
     let apiCollection = ref([]);
-    function searchBusRoute() {
+    let keyboard = ref([
+      { key: "紅" },
+      { key: "藍" },
+      { key: 1 },
+      { key: 2 },
+      { key: 3 },
+      { key: "綠" },
+      { key: "綠" },
+      { key: 4 },
+      { key: 5 },
+      { key: 6 },
+      { key: "橘" },
+      { key: "小" },
+      { key: 7 },
+      { key: 8 },
+      { key: 9 },
+      { key: "其他" },
+      { key: "幹線" },
+      { key: "重設" },
+      { key: "0" },
+      { key: "delet" },
+    ]);
+    let isStoreRoute = ref(false);
+    async function searchBusRoute(e) {
+      let api;
       //將params作為參數
-      getBusApi.route.getSpecificCity(router.params.City).then((response) => {
-        apiCollection.value.push(response.data);
-      });
-      console.log(apiCollection);
+      await getBusApi.route
+        .getSpecificCity(router.params.City)
+        .then((response) => {
+          api = response.data;
+        });
+      //篩選對應關鍵字
+      apiCollection.value = api.filter((data) =>
+        data?.RouteName.Zh_tw.startsWith(e.target.value)
+      );
     }
     let inputHolder = `${router.params.City}公車查詢`;
     let title = `${router.params.City}中已存路線`;
 
+    function storeBusRoute(id) {
+      isStoreRoute.value = id;
+    }
+
+    //下方鍵盤
     function getUserPress() {
       console.log("word");
     }
 
     return {
       searchBusRoute,
+      storeBusRoute,
+      getUserPress,
       props,
       inputHolder,
       title,
-      getUserPress,
       apiCollection,
+      isStoreRoute,
+      keyboard,
     };
   },
 };
@@ -86,6 +131,8 @@ export default {
 .search_content {
   background: colors.$main_bg;
   padding: 0 15px;
+  // 沒有資料的預設高
+  min-height: 1000px;
 
   h3 {
     font-size: 16px;
@@ -111,8 +158,17 @@ export default {
   }
 
   span {
+    display: block;
+    text-align: start;
     font-size: 14px;
   }
+}
+.search_store {
+  width: 25px;
+  height: 25px;
+}
+.stored {
+  color: #b96c58;
 }
 
 .search_keyboard {
@@ -120,7 +176,16 @@ export default {
   grid-template-columns: 20% 20% 20% 20% 20%;
   grid-template-rows: 25% 25% 25% 25%;
 
+  //鍵盤定位
+  position: fixed;
+  bottom: 0%;
+  width: 100%;
+  height: 30%;
   div {
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: linear-gradient(
         138.74deg,
         rgba(230, 206, 173, 0.3) 8.67%,

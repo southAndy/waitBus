@@ -43,7 +43,15 @@ export default {
     //掛載地圖
     onMounted(() => {
       mapInstance.value = leaflet
-        .map("map")
+        .map("map", {
+          // 解決縮放問題
+          // https://salesforce.stackexchange.com/questions/180977/leaflet-error-when-zoom-after-close-popup-in-lightning-component
+          zoomControl: true,
+          zoom: 1,
+          zoomAnimation: false,
+          fadeAnimation: true,
+          markerZoomAnimation: true,
+        })
         .setView([22.997593951648952, 120.21265380386116], 15);
       console.log("創造地圖實例", mapInstance);
       leaflet
@@ -118,5 +126,15 @@ export default {
 .station {
   //地圖尺寸
   height: 800px;
+}
+:root {
+  --map-tiles-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg)
+    saturate(0.3) brightness(0.7);
+}
+
+@media (prefers-color-scheme: dark) {
+  .map-tiles {
+    filter: var(--map-tiles-filter, none);
+  }
 }
 </style>
