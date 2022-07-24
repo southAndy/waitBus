@@ -10,7 +10,12 @@
     </common-navbar-vue>
     <section class="search_content">
       <h3>{{ title }}</h3>
-      <div class="search_card" v-for="station in apiCollection" :key="station">
+      <router-link
+        :to="{ name: 'StationDeatil', params: { UID: station.RouteUID } }"
+        class="search_card"
+        v-for="station in apiCollection"
+        :key="station"
+      >
         <div>
           <h4>{{ station.RouteName.Zh_tw }}</h4>
           <span
@@ -27,7 +32,7 @@
             ]"
           />
         </div>
-      </div>
+      </router-link>
     </section>
     <div class="search_keyboard">
       <div v-for="item in keyboard" :key="item" @click="getUserPress">

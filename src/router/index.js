@@ -20,6 +20,13 @@ const router = createRouter({
       props: true,
       component: () => import("@/views/BusRoute.vue"),
     },
+    {
+      path: "/StationDetail/:UID",
+      name: "StationDeatil",
+      props: true,
+      component: () => import("@/views/StationDetail.vue"),
+      // component: () => import("@/views/StationDeatil.vue"),
+    },
   ],
 });
 
