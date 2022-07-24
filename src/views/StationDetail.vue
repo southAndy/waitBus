@@ -17,6 +17,41 @@
         >{{ "往台北車站" }}</span
       >
     </div>
+    <section v-show="!isMapMode" class="detail_timetable">
+      <time class="detail_timetable-update">{{ "10秒前更新" }}</time>
+      <div>
+        <div class="detail_timetable-list">
+          <time class="detail_timetable-in">{{ "4分" }}</time>
+          <span class="detail_timetable-station">{{ "永春高中" }}</span>
+        </div>
+        <div class="detail_timetable-list">
+          <time class="detail_timetable-in">{{ "4分" }}</time>
+          <span class="detail_timetable-station">{{ "永春高中" }}</span>
+        </div>
+        <div class="detail_timetable-list">
+          <time class="detail_timetable-in">{{ "4分" }}</time>
+          <span class="detail_timetable-station">{{ "永春高中" }}</span>
+        </div>
+        <div class="detail_timetable-list">
+          <time class="detail_timetable-in">{{ "4分" }}</time>
+          <span class="detail_timetable-station">{{ "永春高中" }}</span>
+        </div>
+        <div class="detail_timetable-list">
+          <time class="detail_timetable-in">{{ "4分" }}</time>
+          <span class="detail_timetable-station">{{ "永春高中" }}</span>
+        </div>
+        <div class="detail_timetable-list">
+          <time class="detail_timetable-in">{{ "4分" }}</time>
+          <span class="detail_timetable-station">{{ "永春高中" }}</span>
+        </div>
+        <div class="detail_timetable-list">
+          <time :class="['detail_timetable-in', { arrived: true }]">{{
+            "coming!"
+          }}</time>
+          <span class="detail_timetable-station">{{ "101" }}</span>
+        </div>
+      </div>
+    </section>
     <section v-show="isMapMode" id="map" class="map_setting"></section>
   </main>
 </template>
@@ -97,7 +132,12 @@ export default {
   height: 1000px;
   width: 100%;
 }
+.detail {
+  background-color: colors.$main-bg;
 
+  &_direction {
+  }
+}
 .detail_direction {
   display: flex;
   justify-content: space-around;
@@ -115,5 +155,38 @@ export default {
 }
 .active {
   color: white !important;
+}
+.arrived {
+  background-color: colors.$main-navbar !important;
+  color: white !important;
+}
+
+// content
+.detail_timetable {
+  background-color: colors.$main-bg;
+  min-height: 100vh;
+  padding: 0 15px;
+  margin-top: 15px;
+  &-update {
+    display: block;
+    text-align: end;
+  }
+  &-list {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid #cccccc;
+  }
+  &-in {
+    background: #f8f8f8;
+    border: 1px solid #61a68a;
+    border-radius: 2px 12px 12px 2px;
+    color: green;
+    width: 75px;
+    line-height: 28px;
+    margin-right: 10px;
+  }
+  &-station {
+    align-self: center;
+  }
 }
 </style>
