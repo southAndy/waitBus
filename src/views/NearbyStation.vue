@@ -17,7 +17,6 @@ export default {
   components: { CommonNavbar },
   setup() {
     const store = getNearStation();
-    console.log(store.apiToken);
     store.getToken();
 
     let mapInstance = ref({});
@@ -58,6 +57,7 @@ export default {
       leaflet
         .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           maxZoom: 19,
+          className: "map-tiles",
           attribution: "© OpenStreetMap",
         })
         .addTo(mapInstance.value);
@@ -134,14 +134,7 @@ export default {
   //地圖尺寸
   height: 800px;
 }
-:root {
-  --map-tiles-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg)
-    saturate(0.3) brightness(0.7);
-}
-
-@media (prefers-color-scheme: dark) {
-  .map-tiles {
-    filter: var(--map-tiles-filter, none);
-  }
+.map-tiles {
+  filter: var(--map-tiles-filter, none);
 }
 </style>

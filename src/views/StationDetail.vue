@@ -17,24 +17,27 @@
         >{{ "往台北車站" }}</span
       >
     </div>
-    <section v-show="!isMapMode" class="detail_timetable">
-      <time class="detail_timetable-update">{{ "10秒前更新" }}</time>
-      <div>
-        <div
-          class="detail_timetable-list"
-          v-for="timetable in busStationInfo[0][0].Stops"
-          :key="timetable.RouteUID"
-        >
-          <time :class="['detail_timetable-in', { arrived: false }]">{{
-            "4分"
-          }}</time>
-          <span class="detail_timetable-station">{{
-            timetable.StopName.Zh_tw
-          }}</span>
+    <div v-if="busStationInfo">
+      <section v-show="!isMapMode" class="detail_timetable">
+        <time class="detail_timetable-update">{{ "10秒前更新" }}</time>
+        <div>
+          <!-- todo fix  報錯造成leaflet無法持續更新-->
+          <!-- <div
+            class="detail_timetable-list"
+            v-for="timetable in busStationInfo[0][0].Stops"
+            :key="timetable.RouteUID"
+          >
+            <time :class="['detail_timetable-in', { arrived: false }]">{{
+              "4分"
+            }}</time>
+            <span class="detail_timetable-station">{{
+              timetable.StopName.Zh_tw
+            }}</span>
+          </div> -->
         </div>
-      </div>
-    </section>
-    <section v-show="isMapMode" id="map" class="map_setting"></section>
+      </section>
+      <section v-show="isMapMode" id="map" class="map_setting"></section>
+    </div>
   </main>
 </template>
 <script>
@@ -57,7 +60,6 @@ export default {
   setup() {
     // router
     const router = useRoute();
-    console.log("get UID", router.params.UID);
 
     //判斷公車方向
     let currentDirection = ref(0);
@@ -65,30 +67,34 @@ export default {
     let busStationInfo = ref([]);
 
     //利用params參數 --- 發API,並且篩選
-    console.log(getBusApi);
     async function getRouteDetails(routeName, city) {
-      let api = [];
+      let directionApi = [];
       let arrivedApi = [];
       //站牌順序api
       await getBusApi.route
         .getRouteStation(routeName, city)
         .then((response) => {
           console.log(response.data);
-          api.push(response.data);
+          directionApi.push(response.data);
         });
+      console.log(directionApi[0]);
+      //拆分兩個方向 -- api
+
       //到站時間api
       await getBusApi.route.getArrivedTime(routeName, city).then((response) => {
         console.log(response.data);
         arrivedApi.push(response.data);
       });
       //   //按照到站時間排列
-      console.log(arrivedApi);
+      console.log("before time sort", arrivedApi);
       arrivedApi[0].sort((a, b) => a.EstimateTime - b.EstimateTime);
-      console.log(arrivedApi);
+      console.log("time sorted", arrivedApi);
 
-      console.log(api);
+      console.log(directionApi);
+      //將時間整理進api
+
       //存入ref
-      busStationInfo.value = api;
+      busStationInfo.value = directionApi;
     }
     getRouteDetails(router.query.routeName, router.query.city);
     function switchMode() {
@@ -98,8 +104,10 @@ export default {
     function switchPage(index) {
       currentDirection.value = index;
     }
-
+    //控制顯示模式
     let isMapMode = ref(false);
+
+    //leaflet instance
     let mapContainer = ref({});
     onMounted(() => {
       let mapInstance = {};
