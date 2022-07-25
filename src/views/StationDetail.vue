@@ -11,44 +11,26 @@
     <div class="detail_direction">
       <span
         @click="switchPage(index)"
-        :class="[{ active: currentSelect === index }]"
         v-for="(select, index) in 2"
         :key="select"
+        :class="[{ active: currentDirection === index }]"
         >{{ "往台北車站" }}</span
       >
     </div>
     <section v-show="!isMapMode" class="detail_timetable">
       <time class="detail_timetable-update">{{ "10秒前更新" }}</time>
       <div>
-        <div class="detail_timetable-list">
-          <time class="detail_timetable-in">{{ "4分" }}</time>
-          <span class="detail_timetable-station">{{ "永春高中" }}</span>
-        </div>
-        <div class="detail_timetable-list">
-          <time class="detail_timetable-in">{{ "4分" }}</time>
-          <span class="detail_timetable-station">{{ "永春高中" }}</span>
-        </div>
-        <div class="detail_timetable-list">
-          <time class="detail_timetable-in">{{ "4分" }}</time>
-          <span class="detail_timetable-station">{{ "永春高中" }}</span>
-        </div>
-        <div class="detail_timetable-list">
-          <time class="detail_timetable-in">{{ "4分" }}</time>
-          <span class="detail_timetable-station">{{ "永春高中" }}</span>
-        </div>
-        <div class="detail_timetable-list">
-          <time class="detail_timetable-in">{{ "4分" }}</time>
-          <span class="detail_timetable-station">{{ "永春高中" }}</span>
-        </div>
-        <div class="detail_timetable-list">
-          <time class="detail_timetable-in">{{ "4分" }}</time>
-          <span class="detail_timetable-station">{{ "永春高中" }}</span>
-        </div>
-        <div class="detail_timetable-list">
-          <time :class="['detail_timetable-in', { arrived: true }]">{{
-            "coming!"
+        <div
+          class="detail_timetable-list"
+          v-for="timetable in busStationInfo[0][0].Stops"
+          :key="timetable.RouteUID"
+        >
+          <time :class="['detail_timetable-in', { arrived: false }]">{{
+            "4分"
           }}</time>
-          <span class="detail_timetable-station">{{ "101" }}</span>
+          <span class="detail_timetable-station">{{
+            timetable.StopName.Zh_tw
+          }}</span>
         </div>
       </div>
     </section>
@@ -56,16 +38,19 @@
   </main>
 </template>
 <script>
-//元件
+//vue
+// --元件
 import CommonNavbar from "@/components/CommonNavbar.vue";
-//vue lifecycle
+//-- vue lifecycle
 import { onMounted } from "vue";
-//vue syntax
+//-- vue syntax
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
 //leaflet
 import L from "leaflet";
+//api
+import getBusApi from "@/service/getBusApi";
 export default {
   name: "StationDeatil",
   components: { CommonNavbar },
@@ -73,16 +58,45 @@ export default {
     // router
     const router = useRoute();
     console.log("get UID", router.params.UID);
-    let currentSelect = ref(0);
+
+    //判斷公車方向
+    let currentDirection = ref(0);
+
+    let busStationInfo = ref([]);
 
     //利用params參數 --- 發API,並且篩選
+    console.log(getBusApi);
+    async function getRouteDetails(routeName, city) {
+      let api = [];
+      let arrivedApi = [];
+      //站牌順序api
+      await getBusApi.route
+        .getRouteStation(routeName, city)
+        .then((response) => {
+          console.log(response.data);
+          api.push(response.data);
+        });
+      //到站時間api
+      await getBusApi.route.getArrivedTime(routeName, city).then((response) => {
+        console.log(response.data);
+        arrivedApi.push(response.data);
+      });
+      //   //按照到站時間排列
+      console.log(arrivedApi);
+      arrivedApi[0].sort((a, b) => a.EstimateTime - b.EstimateTime);
+      console.log(arrivedApi);
 
+      console.log(api);
+      //存入ref
+      busStationInfo.value = api;
+    }
+    getRouteDetails(router.query.routeName, router.query.city);
     function switchMode() {
       console.log("switch mode --- ");
       isMapMode.value = !isMapMode.value;
     }
     function switchPage(index) {
-      currentSelect.value = index;
+      currentDirection.value = index;
     }
 
     let isMapMode = ref(false);
@@ -110,7 +124,8 @@ export default {
       switchMode,
       switchPage,
       isMapMode,
-      currentSelect,
+      currentDirection,
+      busStationInfo,
     };
   },
 };

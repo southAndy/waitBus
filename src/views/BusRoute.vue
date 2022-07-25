@@ -11,7 +11,16 @@
     <section class="search_content">
       <h3>{{ title }}</h3>
       <router-link
-        :to="{ name: 'StationDeatil', params: { UID: station.RouteUID } }"
+        :to="{
+          name: 'StationDeatil',
+          params: {
+            UID: station.RouteUID,
+          },
+          query: {
+            routeName: station.RouteName.Zh_tw,
+            city: city,
+          },
+        }"
         class="search_card"
         v-for="station in apiCollection"
         :key="station"
@@ -48,10 +57,10 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 export default {
   components: { CommonNavbarVue },
-  props: { city: String },
   setup(props) {
     let router = useRoute();
     let apiCollection = ref([]);
+    //下方鍵盤參數
     let keyboard = ref([
       { key: "紅" },
       { key: "藍" },
@@ -88,6 +97,7 @@ export default {
         data?.RouteName.Zh_tw.startsWith(e.target.value)
       );
     }
+    let city = router.params.City;
     let inputHolder = `${router.params.City}公車查詢`;
     let title = `${router.params.City}中已存路線`;
 
@@ -110,6 +120,7 @@ export default {
       apiCollection,
       isStoreRoute,
       keyboard,
+      city,
     };
   },
 };
