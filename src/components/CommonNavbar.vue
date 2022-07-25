@@ -25,7 +25,8 @@ function toPrevious() {
 
   font-size: 21px;
   color: white;
-  background-color: colors.$main-navbar;
+  // background-color: colors.$main-navbar;
+  background-color: var(--navbar-bg);
 
   &_previous {
     display: flex;

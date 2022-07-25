@@ -141,6 +141,7 @@ export default {
 }
 .search_content {
   background: colors.$main_bg;
+  background: var(--background-color-primary);
   padding: 0 15px;
   // 沒有資料的預設高
   min-height: 1000px;
@@ -197,19 +198,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(
-        138.74deg,
-        rgba(230, 206, 173, 0.3) 8.67%,
-        rgba(242, 229, 210, 0.3) 11.9%,
-        rgba(230, 206, 173, 0.3) 11.91%,
-        rgba(230, 206, 173, 0.3) 13.34%,
-        rgba(230, 206, 173, 0.3) 16.58%,
-        rgba(242, 229, 210, 0.3) 17.66%,
-        rgba(242, 229, 210, 0.3) 30.6%,
-        rgba(230, 206, 173, 0.3) 30.61%,
-        rgba(235, 211, 176, 0.3) 76.26%
-      ),
-      #f8f2e5;
+    background: var(--home-select-bg-primary);
+    color: var(--home-item-font-primary);
     /* light */
 
     border: 3px solid #ffffff;

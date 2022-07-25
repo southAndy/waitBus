@@ -1,7 +1,7 @@
 <template>
   <section class="home">
     <header class="home_logo">
-      <q-toggle v-model="first" color="green" class="mode" />
+      <q-toggle v-model="first" color="green" class="mode" @click="test" />
       <div>
         <img src="@/assets/images/LOGO-green.png" alt="logo" />
       </div>
@@ -65,6 +65,10 @@ export default {
       { zh: "公路客運", en: "Taipei" },
       { zh: "已儲存路線", en: "Taipei" },
     ]);
+    function test() {
+      document.documentElement.classList.toggle("dark-theme");
+      // first.value = !first.value;
+    }
     let list = ref([]);
     let token = () => async () => {
       await getToken;
@@ -77,6 +81,7 @@ export default {
       cityList,
       list,
       token,
+      test,
     };
   },
 };
@@ -89,7 +94,7 @@ export default {
 .home {
   position: relative;
   //背景設定
-  background-color: antiquewhite;
+  background-color: var(--background-color-primary);
   background-repeat: no-repeat;
   background-position-y: 30%;
   background-image: url("@/assets/images/main-3\ 1.png");
@@ -106,6 +111,7 @@ export default {
     margin: 0;
 
     h1 {
+      color: var(--home-logo-primary);
       font-size: 16px;
       font-weight: 400;
       line-height: 15px;
@@ -131,7 +137,7 @@ export default {
       height: 37px;
       width: 167px;
       //樣式
-      background-color: #f8f8f8;
+      background-color: var(--home-item-bg-primary);
       border-radius: 4px;
 
       .icon {
@@ -143,6 +149,9 @@ export default {
           width: 100%;
           object-fit: contain;
         }
+      }
+      span {
+        color: var(--home-item-font-primary);
       }
     }
   }
@@ -169,21 +178,8 @@ export default {
         font-size: 20px;
 
         //style
-        background: linear-gradient(
-            138.74deg,
-            rgba(230, 206, 173, 0.3) 8.67%,
-            rgba(242, 229, 210, 0.3) 11.9%,
-            rgba(230, 206, 173, 0.3) 11.91%,
-            rgba(230, 206, 173, 0.3) 13.34%,
-            rgba(230, 206, 173, 0.3) 16.58%,
-            rgba(242, 229, 210, 0.3) 17.66%,
-            rgba(242, 229, 210, 0.3) 30.6%,
-            rgba(230, 206, 173, 0.3) 30.61%,
-            rgba(235, 211, 176, 0.3) 76.26%
-          ),
-          #f8f2e5;
-        /* light */
-
+        background: var(--home-select-bg-primary);
+        color: var(--home-select-font-primary);
         border: 3px solid #ffffff;
         /* block-shadows */
 
