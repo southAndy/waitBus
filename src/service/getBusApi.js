@@ -1,15 +1,26 @@
 import axios from "axios";
-import { getToken } from "./getToken";
+// import { getToken } from "./getToken";
 
-async function accessToken() {
-  let token = await getToken;
-  return token.access_token;
-}
-let token = accessToken();
-console.log("", token);
+// const busAdvancedAPI = async () => {
+//   console.log("hi");
+//   await getToken;
+//   return axios.create({
+//     baseURL: "https://tdx.transportdata.tw/api/advanced/v2/Bus",
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
 
+//       //API認證token
+//       //todo token 產生速度太慢,axios實例拿不到 -- promise / callback
+//       Authorization: `Bearer ${getToken.access_token}`,
+//       //舊版加密函式
+//       // ...getAuthorizationHeader(),
+//     },
+//   });
+// };
+// busAdvancedAPI()
 let diedToken =
-  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NTg3MjE1NzEsImlhdCI6MTY1ODYzNTE3MSwianRpIjoiMjJmZjM5NTYtYjQyYS00OWYwLTlmNTYtOTI4OWY4ODA0MDBkIiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.nnhZlkubmIHakLXKu-lDMileKPBcoORwTZUuROnoNiggTmOiTHIIqdZ_QNNC1PV4-ak30Vua_QMGnkDHG7ngLQbsg-0R8jOlTcYgXCyWvf9QuXYoVGu8B48P9RRatZW77w_jGTs1BlakLjFJW6YxlW845vv80WyhTVHBDCxe1rSQkLqi5hELsGXHaHudHfFODJ9pBLo0ut59MxihuZfF1TE_qUvg7uwcozMaM3svajrYCcjB3PRZrWg1vhM_1Q2LozysB7O--o29wRFQcx9e8VlvsNYcpImbE6lHl58FAsYk1YauEukqQs0jXy-VYxAPa-Jl_NsLUTqNkBCnksxnlQ";
+  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NTg4MDk1NjcsImlhdCI6MTY1ODcyMzE2NywianRpIjoiYTMyMjMxMzUtMWEwYy00ZGQxLWJjYzQtOWZhYWNjZjc1ZDMwIiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.V9IiRTFaTQo0RR28lfqyajLXRi3NVYT3lKYqI9WztHZ7-YYcufrGwFkk_LDot7GB9Ud4KMXnneG91RM0aXU83VXHl8LgmmdxdC1Bk-UUevi_IkmyzLDuI0J2H4mNYbSZC66bTJHntjVeAIrGUqvKM7h-A2EeKmoqGvnGvtIdQ1C8FHFB0yjHsTvTZ3-aJVB11bjWSNXBgQVl-BAvajMDWmXDNQVjO-MWEpOG4mkatSVxhQCqkFS7dw-YNHU8OEBaqvflAn2PYe2MW02LGkaWmvxBuicgIcKTOkCfqeayyhQ8p3_2pTGY9AGIA4un0PcS43xskRgcu6KKIR-VlT0Mng";
 
 const busAdvancedAPI = axios.create({
   baseURL: "https://tdx.transportdata.tw/api/advanced/v2/Bus",
@@ -18,12 +29,13 @@ const busAdvancedAPI = axios.create({
     "Content-Type": "application/json",
 
     //API認證token
-    //todo token 產生速度太慢,axios實例拿不到 -- promise / callback
     Authorization: `Bearer ${diedToken}`,
     //舊版加密函式
     // ...getAuthorizationHeader(),
   },
 });
+console.log(busAdvancedAPI);
+
 const busAPI = axios.create({
   baseURL: "https://tdx.transportdata.tw/api/basic/v2/Bus",
   headers: {
@@ -37,6 +49,7 @@ const busAPI = axios.create({
     // ...getAuthorizationHeader(),
   },
 });
+
 //? output API
 export default {
   station: {
@@ -72,6 +85,16 @@ export default {
       // });
       return busAPI.get(`Route/City/${cityName}?%24top=500&%24format=JSON
       `);
+    },
+    getRouteStation(routeName, city) {
+      return busAPI.get(
+        `/StopOfRoute/City/${city}/${routeName}?%24top=100&%24format=JSON`
+      );
+    },
+    getArrivedTime(routeName, city) {
+      return busAPI.get(
+        `/EstimatedTimeOfArrival/City/${city}/${routeName}?%24top=30&%24format=JSON`
+      );
     },
   },
   city: {},

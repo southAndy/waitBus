@@ -18,6 +18,7 @@ export default {
   setup() {
     const store = getNearStation();
     console.log(store.apiToken);
+    store.getToken();
 
     let mapInstance = ref({});
     let apiCollection = ref([]);
@@ -83,6 +84,12 @@ export default {
             list.push(response.data);
             return response;
           });
+        // await store
+        //   .getSpecificRange(userPosition.value.lat, userPosition.value.lng)
+        //   .then((response) => {
+        //     list.push(response.data);
+        //     return response;
+        //   });
         console.log(list);
         //製作站牌座標
         let markers = [];
