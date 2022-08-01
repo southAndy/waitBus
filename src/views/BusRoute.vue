@@ -94,7 +94,7 @@ export default {
         });
       //篩選對應關鍵字
       apiCollection.value = api.filter((data) =>
-        data?.RouteName.Zh_tw.startsWith(e.target.value)
+        data?.RouteName.Zh_tw.includes(e.target.value)
       );
     }
     let city = router.params.City;

@@ -36,6 +36,11 @@ export default {
     #f8f2e5;
   --home-select-font-primary: #373232;
   --navbar-bg: #61a68a;
+  --timelist-bg: #f8f8f8;
+  --timelist-border: 1px solid #61a68a;
+  --timelist-font: green;
+
+  //leaflet
   //laflet -- setting :https://gist.github.com/BrendonKoz/b1df234fe3ee388b402cd8e98f7eedbd
   --map-tiles-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg)
     saturate(0.3) brightness(0.7);
@@ -48,6 +53,9 @@ export default {
   --home-select-bg-primary: #373232;
   --home-select-font-primary: #f8f8f8;
   --navbar-bg: #373232;
+  --timelist-bg: #373232;
+  --timelist-border: 1px solid #c1b2b2;
+  --timelist-font: white;
 }
 nav {
   padding: 30px;
