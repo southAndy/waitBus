@@ -22,18 +22,20 @@
         <time class="detail_timetable-update">{{ "10秒前更新" }}</time>
         <div>
           <!-- todo fix  報錯造成leaflet無法持續更新-->
-          <!-- <div
+          <div
             class="detail_timetable-list"
-            v-for="timetable in busStationInfo[0][0].Stops"
+            v-for="timetable in busStationInfo"
             :key="timetable.RouteUID"
           >
-            <time :class="['detail_timetable-in', { arrived: false }]">{{
-              "4分"
-            }}</time>
+            <!-- ? time ->對應車班的時間 status ->公車是否發車 -->
+            <TimeListVue
+              :time="timetable.EstimateTime"
+              :status="timetable.StopStatus"
+            />
             <span class="detail_timetable-station">{{
               timetable.StopName.Zh_tw
             }}</span>
-          </div> -->
+          </div>
         </div>
       </section>
       <section v-show="isMapMode" id="map" class="map_setting"></section>
@@ -44,10 +46,12 @@
 //vue
 // --元件
 import CommonNavbar from "@/components/CommonNavbar.vue";
+import TimeListVue from "@/components/TimeList.vue";
 //-- vue lifecycle
 import { onMounted } from "vue";
 //-- vue syntax
 import { ref } from "vue";
+//router
 import { useRoute } from "vue-router";
 
 //leaflet
@@ -56,7 +60,7 @@ import L from "leaflet";
 import getBusApi from "@/service/getBusApi";
 export default {
   name: "StationDeatil",
-  components: { CommonNavbar },
+  components: { CommonNavbar, TimeListVue },
   setup() {
     // router
     const router = useRoute();
@@ -68,35 +72,33 @@ export default {
 
     //利用params參數 --- 發API,並且篩選
     async function getRouteDetails(routeName, city) {
-      let directionApi = [];
+      // let directionApi = [];
       let arrivedApi = [];
       //站牌順序api
-      await getBusApi.route
-        .getRouteStation(routeName, city)
-        .then((response) => {
-          console.log(response.data);
-          directionApi.push(response.data);
-        });
-      console.log(directionApi[0]);
+      // await getBusApi.route
+      //   .getRouteStation(routeName, city)
+      //   .then((response) => {
+      //     console.log(response.data);
+      //     directionApi.push(response.data);
+      //   });
+      // console.log(directionApi[0]);
       //拆分兩個方向 -- api
 
       //到站時間api
       await getBusApi.route.getArrivedTime(routeName, city).then((response) => {
-        console.log(response.data);
+        //todo 在這邊分流
         arrivedApi.push(response.data);
       });
-      //   //按照到站時間排列
       console.log("before time sort", arrivedApi);
+      //按照到站時間排列(estimate small 》 big)
       arrivedApi[0].sort((a, b) => a.EstimateTime - b.EstimateTime);
       console.log("time sorted", arrivedApi);
 
-      console.log(directionApi);
-      //將時間整理進api
-
       //存入ref
-      busStationInfo.value = directionApi;
+      busStationInfo.value = arrivedApi[0];
     }
     getRouteDetails(router.query.routeName, router.query.city);
+
     function switchMode() {
       console.log("switch mode --- ");
       isMapMode.value = !isMapMode.value;
@@ -156,26 +158,37 @@ export default {
   width: 100%;
 }
 .detail {
-  background-color: colors.$main-bg;
+  background-color: var(--background-color-primary);
 
   &_direction {
+    background-color: var(--navbar-bg);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 35px;
+
+    span {
+      display: block;
+      cursor: pointer;
+      color: colors.$detail_font;
+    }
   }
 }
-.detail_direction {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+// .detail_direction {
+//   display: flex;
+//   justify-content: space-around;
+//   align-items: center;
 
-  background-color: colors.$main-hover;
+//   background-color: colors.$main-hover;
 
-  height: 35px;
+//   height: 35px;
 
-  span {
-    display: block;
-    cursor: pointer;
-    color: colors.$detail_font;
-  }
-}
+//   span {
+//     display: block;
+//     cursor: pointer;
+//     color: colors.$detail_font;
+//   }
+// }
 .active {
   color: white !important;
 }
@@ -186,7 +199,7 @@ export default {
 
 // content
 .detail_timetable {
-  background-color: colors.$main-bg;
+  background-color: var(--background-color-primary);
   min-height: 100vh;
   padding: 0 15px;
   margin-top: 15px;
@@ -199,17 +212,18 @@ export default {
     padding: 15px 0;
     border-bottom: 1px solid #cccccc;
   }
-  &-in {
-    background: #f8f8f8;
-    border: 1px solid #61a68a;
-    border-radius: 2px 12px 12px 2px;
-    color: green;
-    width: 75px;
-    line-height: 28px;
-    margin-right: 10px;
-  }
+  // &-in {
+  //   background: #f8f8f8;
+  //   border: 1px solid #61a68a;
+  //   border-radius: 2px 12px 12px 2px;
+  //   color: green;
+  //   width: 75px;
+  //   line-height: 28px;
+  //   margin-right: 10px;
+  // }
   &-station {
     align-self: center;
+    color: var(--home-select-font-primary);
   }
 }
 </style>
