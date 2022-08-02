@@ -8,23 +8,31 @@
         <img src="@/assets/images/icon/Group.png" alt="更多資訊" />
       </div>
     </common-navbar>
-    <div class="detail_direction">
-      <span
-        @click="switchPage(index)"
-        v-for="(select, index) in 2"
-        :key="select"
-        :class="[{ active: currentDirection === index }]"
-        >{{ "往台北車站" }}</span
+    <div v-if="busRouteDirection" class="detail_direction">
+      <SelectButton
+        @click="switchDirection(0)"
+        :class="[{ active: currDirection === 0 }]"
       >
+        {{ busRouteDirection[0].DepartureStopNameZh }}
+      </SelectButton>
+      <SelectButton
+        @click="switchDirection(1)"
+        :class="[{ active: currDirection === 1 }]"
+      >
+        {{ busRouteDirection[0].DestinationStopNameZh }}
+      </SelectButton>
     </div>
     <div v-if="busStationInfo">
       <section v-show="!isMapMode" class="detail_timetable">
-        <time class="detail_timetable-update">{{ "10秒前更新" }}</time>
+        <DataUpdateBar
+          class="detail_timetable-update"
+          :update="busStationInfo[0]?.UpdateTime"
+        />
         <div>
           <!-- todo fix  報錯造成leaflet無法持續更新-->
           <div
             class="detail_timetable-list"
-            v-for="timetable in busStationInfo"
+            v-for="timetable in currentDirectionAPIs"
             :key="timetable.RouteUID"
           >
             <!-- ? time ->對應車班的時間 status ->公車是否發車 -->
@@ -47,6 +55,8 @@
 // --元件
 import CommonNavbar from "@/components/CommonNavbar.vue";
 import TimeListVue from "@/components/TimeList.vue";
+import DataUpdateBar from "@/components/DataUpdateBar.vue";
+
 //-- vue lifecycle
 import { onMounted } from "vue";
 //-- vue syntax
@@ -58,9 +68,16 @@ import { useRoute } from "vue-router";
 import L from "leaflet";
 //api
 import getBusApi from "@/service/getBusApi";
+import SelectButton from "@/components/SelectButton.vue";
+import { computed } from "@vue/reactivity";
 export default {
   name: "StationDeatil",
-  components: { CommonNavbar, TimeListVue },
+  components: {
+    CommonNavbar,
+    TimeListVue,
+    DataUpdateBar,
+    SelectButton,
+  },
   setup() {
     // router
     const router = useRoute();
@@ -70,18 +87,22 @@ export default {
 
     let busStationInfo = ref([]);
 
+    let busRouteName = ref(router.query.routeName);
+    let busCity = ref(router.query.city);
+    let busRouteDirection = ref();
+
     //利用params參數 --- 發API,並且篩選
     async function getRouteDetails(routeName, city) {
-      // let directionApi = [];
+      let directionApiList = [];
       let arrivedApi = [];
       //站牌順序api
-      // await getBusApi.route
-      //   .getRouteStation(routeName, city)
-      //   .then((response) => {
-      //     console.log(response.data);
-      //     directionApi.push(response.data);
-      //   });
-      // console.log(directionApi[0]);
+      await getBusApi.route.getRouteMap(city).then((response) => {
+        directionApiList.push(response.data);
+      });
+      //解構
+      let [x] = directionApiList;
+      let y = x.filter((data) => data.RouteName.Zh_tw === busRouteName.value);
+      busRouteDirection.value = y;
       //拆分兩個方向 -- api
 
       //到站時間api
@@ -89,22 +110,28 @@ export default {
         //todo 在這邊分流
         arrivedApi.push(response.data);
       });
-      console.log("before time sort", arrivedApi);
       //按照到站時間排列(estimate small 》 big)
       arrivedApi[0].sort((a, b) => a.EstimateTime - b.EstimateTime);
-      console.log("time sorted", arrivedApi);
 
       //存入ref
       busStationInfo.value = arrivedApi[0];
     }
-    getRouteDetails(router.query.routeName, router.query.city);
+    getRouteDetails(busRouteName.value, busCity.value);
+
+    //動態判斷現在行駛方向
+    let currDirection = ref(0);
+    let currentDirectionAPIs = computed(() =>
+      busStationInfo.value.filter(
+        (data) => data.Direction === currDirection.value
+      )
+    );
 
     function switchMode() {
-      console.log("switch mode --- ");
+      ("switch mode --- ");
       isMapMode.value = !isMapMode.value;
     }
-    function switchPage(index) {
-      currentDirection.value = index;
+    function switchDirection(index) {
+      currDirection.value = index;
     }
     //控制顯示模式
     let isMapMode = ref(false);
@@ -113,7 +140,7 @@ export default {
     let mapContainer = ref({});
     onMounted(() => {
       let mapInstance = {};
-      console.log("onMounting");
+      ("onMounting");
       mapInstance = L.map("map", {
         // 解決縮放問題
         // https://salesforce.stackexchange.com/questions/180977/leaflet-error-when-zoom-after-close-popup-in-lightning-component
@@ -123,7 +150,6 @@ export default {
         fadeAnimation: true,
         markerZoomAnimation: true,
       }).setView([22.997593951648952, 120.21265380386116], 15);
-      console.log("創造地圖實例", mapInstance);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: "© OpenStreetMap",
@@ -132,10 +158,14 @@ export default {
     });
     return {
       switchMode,
-      switchPage,
+      switchDirection,
+      getRouteDetails,
       isMapMode,
       currentDirection,
       busStationInfo,
+      currentDirectionAPIs,
+      busRouteDirection,
+      currDirection,
     };
   },
 };
@@ -167,9 +197,12 @@ export default {
     align-items: center;
     height: 35px;
 
-    span {
+    button {
+      background-color: var(--navbar-bg);
       display: block;
       cursor: pointer;
+      border: none;
+
       color: colors.$detail_font;
     }
   }
