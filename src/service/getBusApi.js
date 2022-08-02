@@ -96,9 +96,11 @@ export default {
       );
     },
     getRouteMap(city) {
-      return busAPI.get(
-        `https://tdx.transportdata.tw/api/basic/v2/Bus/Route/City/${city}?%24top=100&%24format=JSON`
-      );
+      return busAPI.get(`/Route/City/${city}?%24top=100&%24format=JSON`);
+    },
+    getRouteLatLng() {
+      return busAPI.get(`/RealTimeByFrequency/City/Taipei?%24&%24format=JSON`);
+      // return busAPI.get(`/Station/City/Taipei?%24&%24format=JSON`);
     },
   },
   city: {},

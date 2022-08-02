@@ -55,6 +55,7 @@ export default {
   width: 75px;
   line-height: 28px;
   margin-right: 10px;
+  font-weight: 700;
 }
 //todo animate -- 進站效果
 // @keyframes bus-coming {
