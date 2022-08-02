@@ -239,6 +239,7 @@ export default {
   &-update {
     display: block;
     text-align: end;
+    color: var(--home-select-font-primary);
   }
   &-list {
     display: flex;
