@@ -8,6 +8,7 @@
       <h1>台灣搭公車</h1>
     </header>
     <div class="home_nearby">
+      <h3 class="home_nearby-title">查詢附近</h3>
       <router-link class="home_nearby-item" :to="{ name: 'NearbyStation' }">
         <div class="icon">
           <img src="@/assets/images/icon/map-mark.png" alt="附近站牌" />
@@ -88,9 +89,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @use "@/assets/scss/reset.scss";
-.mode {
-  margin-left: 300px;
-}
+@use "@/assets/scss/breakpoints";
 .home {
   position: relative;
   //背景設定
@@ -99,9 +98,15 @@ export default {
   background-position-y: 30%;
   background-image: url("@/assets/images/main-3\ 1.png");
   height: 100vh;
-
   //間距
   padding: 0 16px;
+
+  @include breakpoints.tablet {
+    background-position-y: 23%;
+    background-position-x: 35%;
+    background-image: url("@/assets/images/main\ 1.png");
+    padding: 0 70px;
+  }
 
   &_logo {
     display: flex;
@@ -118,6 +123,12 @@ export default {
 
       margin: 0;
     }
+    .mode {
+      margin-left: 300px;
+      @include breakpoints.tablet {
+        margin-left: 80%;
+      }
+    }
   }
   &_nearby {
     //排序
@@ -130,6 +141,28 @@ export default {
     top: 55%;
     right: 0;
     left: 0;
+
+    @include breakpoints.tablet {
+      flex-wrap: wrap;
+      justify-content: start;
+      left: 10%;
+      right: unset;
+      top: 50%;
+    }
+
+    &-title {
+      display: none;
+      @include breakpoints.tablet {
+        display: block;
+        flex-basis: 100%;
+        color: var(--home-item-font-primary);
+        font-size: 22px;
+        text-align: start;
+        // background-image: url("@/assets/images/icon/Rectangle\ 34.png");
+        background-repeat: no-repeat;
+      }
+    }
+
     &-item {
       display: flex;
       align-items: center;
@@ -139,6 +172,10 @@ export default {
       //樣式
       background-color: var(--home-item-bg-primary);
       border-radius: 4px;
+      @include breakpoints.tablet {
+        flex-direction: column;
+        height: 75px;
+      }
 
       .icon {
         display: flex;
@@ -152,6 +189,10 @@ export default {
       }
       span {
         color: var(--home-item-font-primary);
+
+        @include breakpoints.tablet {
+          font-size: 20px;
+        }
       }
     }
   }
@@ -160,10 +201,19 @@ export default {
     bottom: 5%;
     margin-top: 24px;
 
+    @include breakpoints.tablet {
+      bottom: 3%;
+    }
+
     h3 {
+      color: var(--home-item-font-primary);
       font-size: 16px;
       margin: 0;
       text-align: start;
+
+      @include breakpoints.tablet {
+        font-size: 22px;
+      }
     }
     &-items {
       display: grid;
@@ -185,6 +235,9 @@ export default {
 
         box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.15);
         border-radius: 6px;
+        @include breakpoints.tablet {
+          width: 150px;
+        }
       }
     }
   }

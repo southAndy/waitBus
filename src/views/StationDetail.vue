@@ -23,6 +23,7 @@
       </SelectButton>
     </div>
     <div v-if="busStationInfo">
+      <section v-show="isMapMode" id="map" class="map_setting"></section>
       <section v-show="!isMapMode" class="detail_timetable">
         <DataUpdateBar
           class="detail_timetable-update"
@@ -46,7 +47,6 @@
           </div>
         </div>
       </section>
-      <section v-show="isMapMode" id="map" class="map_setting"></section>
     </div>
   </main>
 </template>
@@ -190,6 +190,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @use "@/assets/scss/colors";
+@use "@/assets/scss/breakpoints";
 // header
 .mode,
 .select {
@@ -204,6 +205,11 @@ export default {
 .map_setting {
   height: 1000px;
   width: 100%;
+
+  @include breakpoints.tablet {
+    height: 500px;
+    display: block !important;
+  }
 }
 .detail {
   background-color: var(--background-color-primary);

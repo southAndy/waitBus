@@ -128,6 +128,7 @@ export default {
 <style lang="scss" scoped>
 @use "@/assets/scss/colors";
 @use "@/assets/scss/reset";
+@use "@/assets/scss/breakpoints";
 .search_input {
   height: 37px;
   width: 273px;
@@ -193,6 +194,9 @@ export default {
   bottom: 0%;
   width: 100%;
   height: 30%;
+  @include breakpoints.tablet {
+    display: none;
+  }
   div {
     font-size: 25px;
     display: flex;
