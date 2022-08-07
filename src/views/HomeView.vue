@@ -3,35 +3,44 @@
     <header class="home_logo">
       <q-toggle v-model="first" color="green" class="mode" @click="test" />
       <div>
-        <img src="@/assets/images/LOGO-green.png" alt="logo" />
+        <img :src="image" alt="logo" />
       </div>
       <h1>台灣搭公車</h1>
     </header>
-    <div class="home_nearby">
-      <h3 class="home_nearby-title">查詢附近</h3>
-      <router-link class="home_nearby-item" :to="{ name: 'NearbyStation' }">
-        <div class="icon">
-          <img src="@/assets/images/icon/map-mark.png" alt="附近站牌" />
-        </div>
-        <span>附近站牌</span>
-      </router-link>
-      <div class="home_nearby-item">
-        <div class="icon">
-          <img src="@/assets/images/icon/Vector.png" alt="附近單車" />
-        </div>
-        <span>附近單車</span>
-      </div>
-    </div>
-    <footer class="home_select">
-      <h3>查詢公車路線</h3>
-      <div class="home_select-items">
-        <router-link
-          :to="{ name: 'BusRoute', params: { City: city.en } }"
-          v-for="city in cityList"
-          :key="city"
-          >{{ city.zh }}
+    <main>
+      <div class="home_nearby">
+        <h3 class="home_nearby-title">查詢附近</h3>
+        <router-link class="home_nearby-item" :to="{ name: 'NearbyStation' }">
+          <div class="icon">
+            <img src="@/assets/images/icon/map-mark.png" alt="附近站牌" />
+          </div>
+          <span>附近站牌</span>
         </router-link>
+        <div class="home_nearby-item">
+          <div class="icon">
+            <img src="@/assets/images/icon/Vector.png" alt="附近單車" />
+          </div>
+          <span>附近單車</span>
+        </div>
+        <!-- <p>使用查詢附近服務需先打開定位服務 讓本網站取用您的位置</p> -->
       </div>
+      <section class="home_select">
+        <h3>查詢公車路線</h3>
+        <div class="home_select-items">
+          <router-link
+            :to="{ name: 'BusRoute', params: { City: city.en } }"
+            v-for="city in cityList"
+            :key="city"
+            >{{ city.zh }}
+          </router-link>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>
+        © Bus Taking 台灣搭公車 - Design by Jujubeleven Liao, For THE F2E 2021
+        week 3
+      </p>
     </footer>
   </section>
 </template>
@@ -44,6 +53,7 @@ import getNearStation from "@/store/Bus/getNearStation";
 import {
   ref,
   // onMounted
+  watch,
 } from "vue";
 
 export default {
@@ -55,6 +65,14 @@ export default {
     store.getToken();
     // quasar item
     let first = ref(true);
+    let image = ref(require("@/assets/images/LOGO-green.png"));
+    watch(first, (current) => {
+      console.log("hi");
+      if (current === true) {
+        image.value = require("@/assets/images/icon/LOGO.png");
+      }
+      image.value = require("@/assets/images/LOGO-green.png");
+    });
 
     let cityList = ref([
       { zh: "台北市", en: "Taipei" },
@@ -83,6 +101,7 @@ export default {
       list,
       token,
       test,
+      image,
     };
   },
 };
@@ -107,6 +126,10 @@ export default {
     background-image: url("@/assets/images/main\ 1.png");
     padding: 0 70px;
   }
+  @include breakpoints.desktop {
+    background-position-y: 55%;
+    background-position-x: 10%;
+  }
 
   &_logo {
     display: flex;
@@ -114,6 +137,12 @@ export default {
     font-size: 20px;
     align-items: center;
     margin: 0;
+
+    @include breakpoints.desktop {
+      position: absolute;
+      left: 23%;
+      top: 15%;
+    }
 
     h1 {
       color: var(--home-logo-primary);
@@ -127,6 +156,9 @@ export default {
       margin-left: 300px;
       @include breakpoints.tablet {
         margin-left: 80%;
+      }
+      @include breakpoints.desktop {
+        margin: 0 auto;
       }
     }
   }
@@ -148,6 +180,10 @@ export default {
       left: 10%;
       right: unset;
       top: 50%;
+    }
+    @include breakpoints.desktop {
+      left: 50%;
+      top: 20%;
     }
 
     &-title {
@@ -204,6 +240,10 @@ export default {
     @include breakpoints.tablet {
       bottom: 3%;
     }
+    @include breakpoints.desktop {
+      left: 50%;
+      top: 40%;
+    }
 
     h3 {
       color: var(--home-item-font-primary);
@@ -239,6 +279,13 @@ export default {
           width: 150px;
         }
       }
+    }
+  }
+  footer {
+    display: none;
+
+    @include breakpoints.desktop {
+      background-color: var(--navbar-bg);
     }
   }
 }

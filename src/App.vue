@@ -17,6 +17,7 @@ export default {
   color: var(--background-color-primary);
 }
 :root {
+  --backgronud-image-primary: require("@/assets/images/main-3\ 1.png");
   --background-color-primary: #f8f2e5;
   --home-logo-primary: black;
   --home-item-bg-primary: #f8f8f8;
@@ -46,6 +47,7 @@ export default {
     saturate(0.3) brightness(0.7);
 }
 :root.dark-theme {
+  --backgronud-image-primary: require("@/assets/images/Bus Taking");
   --background-color-primary: #676565;
   --home-logo-primary: white;
   --home-item-bg-primary: #373232;
