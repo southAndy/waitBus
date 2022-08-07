@@ -9,7 +9,6 @@
       />
     </common-navbar-vue>
     <section class="search_content">
-      <h3>{{ title }}</h3>
       <router-link
         :to="{
           name: 'StationDeatil',
@@ -128,6 +127,7 @@ export default {
 <style lang="scss" scoped>
 @use "@/assets/scss/colors";
 @use "@/assets/scss/reset";
+@use "@/assets/scss/breakpoints";
 .search_input {
   height: 37px;
   width: 273px;
@@ -146,6 +146,13 @@ export default {
   // 沒有資料的預設高
   min-height: 1000px;
 
+  @include breakpoints.desktop {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+  }
+
   h3 {
     font-size: 16px;
     text-align: start;
@@ -163,6 +170,11 @@ export default {
   /* block-shadows */
   box-shadow: 0px 2px 1px 1px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
+
+  @include breakpoints.desktop {
+    flex-basis: 20%;
+    margin-right: 20px;
+  }
 
   h4 {
     font-size: 18px;
@@ -193,6 +205,9 @@ export default {
   bottom: 0%;
   width: 100%;
   height: 30%;
+  @include breakpoints.tablet {
+    display: none;
+  }
   div {
     font-size: 25px;
     display: flex;

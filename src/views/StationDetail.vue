@@ -23,6 +23,7 @@
       </SelectButton>
     </div>
     <div v-if="busStationInfo">
+      <section v-show="isMapMode" id="map" class="map_setting"></section>
       <section v-show="!isMapMode" class="detail_timetable">
         <DataUpdateBar
           class="detail_timetable-update"
@@ -46,7 +47,6 @@
           </div>
         </div>
       </section>
-      <section v-show="isMapMode" id="map" class="map_setting"></section>
     </div>
   </main>
 </template>
@@ -91,6 +91,8 @@ export default {
     let busCity = ref(router.query.city);
     let busRouteDirection = ref();
 
+    let busRouteLatLngList = ref();
+
     //利用params參數 --- 發API,並且篩選
     async function getRouteDetails(routeName, city) {
       let directionApiList = [];
@@ -103,6 +105,7 @@ export default {
       let [x] = directionApiList;
       let y = x.filter((data) => data.RouteName.Zh_tw === busRouteName.value);
       busRouteDirection.value = y;
+
       //拆分兩個方向 -- api
 
       //到站時間api
@@ -138,7 +141,16 @@ export default {
 
     //leaflet instance
     let mapContainer = ref({});
-    onMounted(() => {
+    onMounted(async () => {
+      let routeLatLngList = [];
+      //呼叫行駛路線座標資料的api
+      await getBusApi.route
+        .getRouteLatLng()
+        .then((response) => routeLatLngList.push(response.data));
+      //根據對應路線篩選api
+      busRouteLatLngList.value = routeLatLngList[0].filter((data) => {
+        return data.RouteName.Zh_tw === busRouteName.value;
+      });
       let mapInstance = {};
       ("onMounting");
       mapInstance = L.map("map", {
@@ -149,7 +161,13 @@ export default {
         zoomAnimation: false,
         fadeAnimation: true,
         markerZoomAnimation: true,
-      }).setView([22.997593951648952, 120.21265380386116], 15);
+      }).setView(
+        [
+          busRouteLatLngList.value[0]?.BusPosition.PositionLat,
+          busRouteLatLngList.value[0]?.BusPosition.PositionLon,
+        ],
+        16
+      );
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: "© OpenStreetMap",
@@ -172,6 +190,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @use "@/assets/scss/colors";
+@use "@/assets/scss/breakpoints";
 // header
 .mode,
 .select {
@@ -186,6 +205,11 @@ export default {
 .map_setting {
   height: 1000px;
   width: 100%;
+
+  @include breakpoints.tablet {
+    height: 500px;
+    display: block !important;
+  }
 }
 .detail {
   background-color: var(--background-color-primary);

@@ -20,7 +20,7 @@ import axios from "axios";
 // };
 // busAdvancedAPI()
 let diedToken =
-  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NTk1MDg5MTcsImlhdCI6MTY1OTQyMjUxNywianRpIjoiYzFlMGY2ZWYtMmIyOS00MTlhLWI0NmItOTI0NDU4ZjhlZjM5IiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.dgPWAfgUiZa3phA4DO_GAdJ6phFV9zxvNOLdfu8IlQr27sThywZTDeiWhi6hCQ7dmtj7TpYqTvkrAtw5_Ovtw1Up1hT4EZHJxR1uOlPxF6B8-xXSoZQO_tPnxWMRQwPXlLGGurAuV-hYKtD5NjhjAF3OGDIpUFyIqox3EDniNLp6i-DyKjKxVKdq4K79eGFFRBVsI9JyJCbb_rMf7dgw_NFacbFgMrBwE16O-CG4UmohtKcc84h5_FNe4DSAEtjpD2Ojd7rniH0eVVaj9YClTNXXMfAbV8-6Ob-hxj8eIGw0Er2izJ_DbHu26bQlGzYXkWZbTW-YOERSYLhr6I7bxQ";
+  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NTk5MzgyOTMsImlhdCI6MTY1OTg1MTg5MywianRpIjoiODZkMzM1MTktZjVlZi00NDExLWE5M2EtZTBmMmQ0OTc4ZTY3IiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.B5EYA3u9joDIAZlfXT6GK6wF9SaaXmOqC74lZavSPvu5hCsMWWBhUVRpZJflRp9cmcXHjxGitY4ePiMG1X8wIY4CIGLNWq6t1nTIqhq6EGibIJxomDZGiVTXGqpRAPUwAJPrP0W0sPENZz-EQ69hdhxxJiJhjnKKS5XtdoR7gm9qlPrfp3vL2my9H5Xx7ESB_c1FtuOla0DU7Smb42jKsYrgGpwi3Zez1Dg-LNh3P4CvS5e7_H4wUMbewoGF-SWoH_Jv1KRRjPRtfZn1icvx60msAuN04NsRLNKMYjXHqWbsgSgIqstkNV7uDWmJ83ftr6rsCwf_Ad0yRJ_65_9L6Q";
 
 const busAdvancedAPI = axios.create({
   baseURL: "https://tdx.transportdata.tw/api/advanced/v2/Bus",
@@ -96,9 +96,11 @@ export default {
       );
     },
     getRouteMap(city) {
-      return busAPI.get(
-        `https://tdx.transportdata.tw/api/basic/v2/Bus/Route/City/${city}?%24top=100&%24format=JSON`
-      );
+      return busAPI.get(`/Route/City/${city}?%24top=100&%24format=JSON`);
+    },
+    getRouteLatLng() {
+      return busAPI.get(`/RealTimeByFrequency/City/Taipei?%24&%24format=JSON`);
+      // return busAPI.get(`/Station/City/Taipei?%24&%24format=JSON`);
     },
   },
   city: {},
