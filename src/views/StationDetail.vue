@@ -151,6 +151,32 @@ export default {
       busRouteLatLngList.value = routeLatLngList[0].filter((data) => {
         return data.RouteName.Zh_tw === busRouteName.value;
       });
+      let latList = busRouteLatLngList.value.map((data) => [
+        data.BusPosition.PositionLat,
+        data.BusPosition.PositionLon,
+      ]);
+      // let latList = busRouteLatLngList.value.map(
+      //   (data) => data.BusPosition.PositionLat
+      // );
+      let lonList = busRouteLatLngList.value.map(
+        (data) => data.BusPosition.PositionLon
+      );
+      console.log(latList, lonList);
+
+      // let filtered = computed(() => {
+      //   // let x = [];
+      //   busRouteLatLngList.map((data, index) => {
+      //     console.log();
+      //     //解構API的經緯度
+      //     { lat, lon,geo } = {
+      //       lat: data.BusPosition.PositionLat,
+      //       lon: data.BusPosition.PositionLon,
+      //       geo:data.BusPosition.GeoHash
+      //     };
+      //     //裝入渲染的陣列內
+      //     console.log(lat, lon);
+      //   });
+      // });
       let mapInstance = {};
       ("onMounting");
       mapInstance = L.map("map", {
@@ -166,12 +192,24 @@ export default {
           busRouteLatLngList.value[0]?.BusPosition.PositionLat,
           busRouteLatLngList.value[0]?.BusPosition.PositionLon,
         ],
-        16
+        14
       );
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: "© OpenStreetMap",
       }).addTo(mapInstance);
+
+      // let apiRouteList = [];
+      //根據現在的API資料整理對應的lat,lng
+      let apiRouteList = computed(() => {
+        busStationInfo.value.forEach((data) => console.log(data));
+      });
+      console.log(apiRouteList);
+
+      var polyline = L.polyline(latList, { color: "green" }).addTo(mapInstance);
+      console.log(polyline);
+
+      //解除載入效果
       mapContainer.value = mapInstance;
     });
     return {
