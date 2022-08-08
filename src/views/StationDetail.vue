@@ -144,43 +144,27 @@ export default {
     onMounted(async () => {
       let routeLatLngList = [];
       //呼叫行駛路線座標資料的api
+      //todo:載入完成 -- 解除載入效果
       await getBusApi.route
         .getRouteLatLng()
         .then((response) => routeLatLngList.push(response.data));
-      //根據對應路線篩選api
+      //根據對應路線篩選api資料
       busRouteLatLngList.value = routeLatLngList[0].filter((data) => {
         return data.RouteName.Zh_tw === busRouteName.value;
       });
+      //打包ＡＰＩ資料的經緯：作為地圖方法的參數
       let latList = busRouteLatLngList.value.map((data) => [
         data.BusPosition.PositionLat,
         data.BusPosition.PositionLon,
       ]);
-      // let latList = busRouteLatLngList.value.map(
-      //   (data) => data.BusPosition.PositionLat
-      // );
       let lonList = busRouteLatLngList.value.map(
         (data) => data.BusPosition.PositionLon
       );
       console.log(latList, lonList);
-
-      // let filtered = computed(() => {
-      //   // let x = [];
-      //   busRouteLatLngList.map((data, index) => {
-      //     console.log();
-      //     //解構API的經緯度
-      //     { lat, lon,geo } = {
-      //       lat: data.BusPosition.PositionLat,
-      //       lon: data.BusPosition.PositionLon,
-      //       geo:data.BusPosition.GeoHash
-      //     };
-      //     //裝入渲染的陣列內
-      //     console.log(lat, lon);
-      //   });
-      // });
+      //產生地圖實例
       let mapInstance = {};
-      ("onMounting");
       mapInstance = L.map("map", {
-        // 解決縮放問題
+        // 地圖縮放報錯問題
         // https://salesforce.stackexchange.com/questions/180977/leaflet-error-when-zoom-after-close-popup-in-lightning-component
         zoomControl: true,
         zoom: 1,
@@ -200,16 +184,20 @@ export default {
       }).addTo(mapInstance);
 
       // let apiRouteList = [];
-      //根據現在的API資料整理對應的lat,lng
-      let apiRouteList = computed(() => {
-        busStationInfo.value.forEach((data) => console.log(data));
-      });
-      console.log(apiRouteList);
-
-      var polyline = L.polyline(latList, { color: "green" }).addTo(mapInstance);
+      //產生路線線型
+      var polyline = L.polyline(latList, { color: "blue" }).addTo(mapInstance);
       console.log(polyline);
+      L.marker([25.021378, 121.483632]).addTo(mapInstance);
 
-      //解除載入效果
+      //產生路線座標、顯示資訊
+      let busRouteMarkers = latList.map((route) =>
+        L.marker([route[0], route[1]]).bindPopup()
+      );
+      console.log(busRouteMarkers);
+      L.featureGroup(busRouteMarkers)
+        .addTo(mapInstance)
+        .on("popupopen", () => console.log("hi"));
+
       mapContainer.value = mapInstance;
     });
     return {

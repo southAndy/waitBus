@@ -73,17 +73,12 @@ export default {
         })
         .addTo(mapInstance.value);
 
-      //顯示當前定位
+      //顯示當前定位座標
       leaflet
         .marker([22.997593951648952, 120.21265380386116], {
           icon: store.centerIcon,
         })
         .addTo(mapInstance.value);
-      //測試站牌座標
-      // leaflet
-      //   .marker([23.00227, 120.20899], { icon: store.pointedBusIcon })
-      //   .bindPopup("hello wolrd")
-      //   .addTo(mapInstance.value);
 
       //發API
       console.log(getBusApi);
@@ -95,26 +90,10 @@ export default {
             list.push(response.data);
             return response;
           });
-        // await store
-        //   .getSpecificRange(userPosition.value.lat, userPosition.value.lng)
-        //   .then((response) => {
-        //     list.push(response.data);
-        //     return response;
-        //   });
         console.log(list);
-        //marker's content
-        // function markerContent(apiData) {
-        //   return `
-        //   <section class="">
-        //     <h3>${apiData.StopName.Zh_tw}</h3>
-        //     <div>
-        //       <p>有點難</p>
-        //     </div>
-        //   </section>`;
-        // }
         //製作站牌座標
         let markers = [];
-        //todo
+        //better：解構
         list[0].forEach((data) => {
           markers.push(
             leaflet
@@ -134,13 +113,13 @@ export default {
           .on("popupopen", async (e) => {
             e.layer.setIcon(store.pointedBusIcon);
             console.log(e);
+            //todo 點擊觸發對應的API找尋時刻表
             // await getBusApi.route
             //   .getArrivedTime(routeName, city)
             //   .then((response) => {
             //     console.log(response.data);
             //     arrivedApi.push(response.data);
             //   });
-            //todo 點擊觸發站牌api
             showContent.value = true;
           })
           .on("popupclose", (e) => {
