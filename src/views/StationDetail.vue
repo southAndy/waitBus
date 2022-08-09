@@ -22,7 +22,7 @@
         {{ busRouteDirection[0].DestinationStopNameZh }}
       </SelectButton>
     </div>
-    <div v-if="busStationInfo">
+    <div v-if="busStationInfo" class="detail_content">
       <section v-show="isMapMode" id="map" class="map_setting"></section>
       <section v-show="!isMapMode" class="detail_timetable">
         <DataUpdateBar
@@ -146,7 +146,7 @@ export default {
       //呼叫行駛路線座標資料的api
       //todo:載入完成 -- 解除載入效果
       await getBusApi.route
-        .getRouteLatLng()
+        .getRouteLatLng(busCity.value)
         .then((response) => routeLatLngList.push(response.data));
       //根據對應路線篩選api資料
       busRouteLatLngList.value = routeLatLngList[0].filter((data) => {
@@ -176,7 +176,7 @@ export default {
           busRouteLatLngList.value[0]?.BusPosition.PositionLat,
           busRouteLatLngList.value[0]?.BusPosition.PositionLon,
         ],
-        14
+        12
       );
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
@@ -185,14 +185,42 @@ export default {
 
       // let apiRouteList = [];
       //產生路線線型
-      var polyline = L.polyline(latList, { color: "blue" }).addTo(mapInstance);
+      var polyline = L.polyline(latList, { color: "purple" }).addTo(
+        mapInstance
+      );
       console.log(polyline);
-      L.marker([25.021378, 121.483632]).addTo(mapInstance);
 
       //產生路線座標、顯示資訊
-      let busRouteMarkers = latList.map((route) =>
-        L.marker([route[0], route[1]]).bindPopup()
-      );
+      //產生對應的公車站位
+
+      //公車資訊模板
+      function busRouteContent(api) {
+        return `
+        <div>
+          <h3>站名:${api}</h3>
+          <span>公車狀態：${"進站中"}</span>
+        </div>`;
+      }
+      let busRouteMarkers = latList.map((route, index) => {
+        //way1: 座標要以圖片形式載入
+        // let stopIcon = L.icon({
+        //   iconUrl: require("@/assets/images/icon/Component 4.png"),
+        //   iconSize: [60, 60],
+        // });
+        //way2：客製化座標 -- 不同架構
+        let stopIcon = L.divIcon({
+          className: "map_setting-icon",
+          html: `
+          <div class="map_setting-icon">
+            <h4>1</h4>
+          </div>`,
+          //todo 調整樣式樣式
+          iconUrl: require("@/assets/images/icon/Component 4.png"),
+        });
+        return L.marker([route[0], route[1]], { icon: stopIcon }).bindPopup(
+          busRouteContent(index)
+        );
+      });
       console.log(busRouteMarkers);
       L.featureGroup(busRouteMarkers)
         .addTo(mapInstance)
@@ -236,6 +264,16 @@ export default {
     height: 500px;
     display: block !important;
   }
+  @include breakpoints.desktop {
+    height: 100vh;
+  }
+
+  &-icon {
+    height: 15px;
+    color: black !important;
+    font-size: 25px !important;
+    background-image: require("@/assets/images/icon/Component 4.png");
+  }
 }
 .detail {
   background-color: var(--background-color-primary);
@@ -256,22 +294,13 @@ export default {
       color: colors.$detail_font;
     }
   }
+  &_content {
+    @include breakpoints.desktop {
+      display: flex;
+    }
+  }
 }
-// .detail_direction {
-//   display: flex;
-//   justify-content: space-around;
-//   align-items: center;
 
-//   background-color: colors.$main-hover;
-
-//   height: 35px;
-
-//   span {
-//     display: block;
-//     cursor: pointer;
-//     color: colors.$detail_font;
-//   }
-// }
 .active {
   color: white !important;
 }
@@ -286,6 +315,10 @@ export default {
   min-height: 100vh;
   padding: 0 15px;
   margin-top: 15px;
+  @include breakpoints.desktop {
+    height: 100vh;
+    overflow: scroll;
+  }
   &-update {
     display: block;
     text-align: end;
