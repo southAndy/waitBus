@@ -14,10 +14,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  color: var(--background-color-primary);
 }
 :root {
-  --backgronud-image-primary: require("@/assets/images/main-3\ 1.png");
   --background-color-primary: #f8f2e5;
   --home-logo-primary: black;
   --home-item-bg-primary: #f8f8f8;
