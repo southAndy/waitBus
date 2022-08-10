@@ -12,21 +12,21 @@
   </div>
 </template>
 <script>
+//vue
 import CommonNavbar from "@/components/CommonNavbar.vue";
-import {
-  onMounted,
-  ref,
-  // computed
-} from "vue";
+import { onMounted, ref } from "vue";
+//leaflet
 import leaflet from "leaflet";
+//pinia
 import getBusApi from "@/service/getBusApi";
 import getNearStation from "@/store/Bus/getNearStation";
+
 export default {
   name: "BusView",
   components: { CommonNavbar },
   setup() {
+    //載入對應的pinia store
     const store = getNearStation();
-    store.getToken();
 
     let mapInstance = ref({});
     let apiCollection = ref([]);

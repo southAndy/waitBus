@@ -6,6 +6,8 @@ import axios from "axios";
 const nearbyStore = defineStore("nearbyStore", {
   state: () => {
     return {
+      //預設中心位置
+      defaultCenterLatLon: "",
       apiToken: "",
       //中心樣式
       centerIcon: leaflet.icon({
@@ -22,7 +24,6 @@ const nearbyStore = defineStore("nearbyStore", {
         iconUrl: require("@/assets/images/icon/Component 3.png"),
         iconSize: [25, 35],
       }),
-      axiosInstance: "",
     };
   },
   getters: () => {},
