@@ -1,7 +1,12 @@
 <template>
   <section class="home">
     <header class="home_logo">
-      <q-toggle v-model="first" color="green" class="mode" @click="test" />
+      <q-toggle
+        v-model="isDailyMode"
+        color="green"
+        class="mode"
+        @click="switchThemeMode"
+      />
       <div>
         <img :src="image" alt="logo" />
       </div>
@@ -46,15 +51,8 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import busApi from "@/service/getBusApi";
-import { getToken } from "@/service/getToken";
 import getNearStation from "@/store/Bus/getNearStation";
-import {
-  ref,
-  // onMounted
-  watch,
-} from "vue";
+import { ref } from "vue";
 
 export default {
   name: "HomeView",
@@ -62,18 +60,12 @@ export default {
   setup() {
     //引入pinia
     const store = getNearStation();
+    //todo
+    //在進入首頁時就發API取token
     store.getToken();
-    // quasar item
-    let first = ref(true);
+    // quasar item : 控制日夜間模式
+    let isDailyMode = ref(true);
     let image = ref(require("@/assets/images/LOGO-green.png"));
-    watch(first, (current) => {
-      console.log("hi");
-      if (current === true) {
-        image.value = require("@/assets/images/icon/LOGO.png");
-      }
-      image.value = require("@/assets/images/LOGO-green.png");
-    });
-
     let cityList = ref([
       { zh: "台北市", en: "Taipei" },
       { zh: "新北市", en: "NewTaipei" },
@@ -84,23 +76,14 @@ export default {
       { zh: "公路客運", en: "Taipei" },
       { zh: "已儲存路線", en: "Taipei" },
     ]);
-    function test() {
+    function switchThemeMode() {
       document.documentElement.classList.toggle("dark-theme");
-      // first.value = !first.value;
     }
-    let list = ref([]);
-    let token = () => async () => {
-      await getToken;
-      return getToken.access_token;
-    };
-    //token 給 pinia
 
     return {
-      first,
+      isDailyMode,
       cityList,
-      list,
-      token,
-      test,
+      switchThemeMode,
       image,
     };
   },

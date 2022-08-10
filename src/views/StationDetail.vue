@@ -202,21 +202,23 @@ export default {
         </div>`;
       }
       let busRouteMarkers = latList.map((route, index) => {
-        //way1: 座標要以圖片形式載入
-        // let stopIcon = L.icon({
-        //   iconUrl: require("@/assets/images/icon/Component 4.png"),
-        //   iconSize: [60, 60],
-        // });
-        //way2：客製化座標 -- 不同架構
-        let stopIcon = L.divIcon({
-          className: "map_setting-icon",
-          html: `
-          <div class="map_setting-icon">
-            <h4>1</h4>
-          </div>`,
-          //todo 調整樣式樣式
+        //way1: 座標以圖片形式載入
+        let stopIcon = L.icon({
           iconUrl: require("@/assets/images/icon/Component 4.png"),
+          //size:[width,height]
+          iconSize: [40, 50],
         });
+        //todo
+        //way2：客製化座標 -- 不同架構
+        // let stopIcon = L.divIcon({
+        //   className: "map_setting-icon",
+        //   html: `
+        //   <div class="map_setting-icon">
+        //     <h4>1</h4>
+        //   </div>`,
+        //   //todo 調整樣式樣式
+        //   iconUrl: require("@/assets/images/icon/Component 4.png"),
+        // });
         return L.marker([route[0], route[1]], { icon: stopIcon }).bindPopup(
           busRouteContent(index)
         );
