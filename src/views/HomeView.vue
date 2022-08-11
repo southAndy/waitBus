@@ -51,7 +51,9 @@
 </template>
 
 <script>
-import getNearStation from "@/store/Bus/getNearStation";
+// import getNearStation from "@/store/Bus/getNearStation";
+import useStore from "@/store/index";
+// import getBusApi from "@/service/getBusApi";
 import { ref } from "vue";
 
 export default {
@@ -59,10 +61,10 @@ export default {
   components: {},
   setup() {
     //引入pinia
-    const store = getNearStation();
-    //todo
+    const store = useStore();
     //在進入首頁時就發API取token
-    store.getToken();
+    store.getSpecificCity("Taipei");
+
     // quasar item : 控制日夜間模式
     let isDailyMode = ref(true);
     let image = ref(require("@/assets/images/LOGO-green.png"));
