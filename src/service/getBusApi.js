@@ -1,26 +1,28 @@
 import axios from "axios";
-// import { getToken } from "./getToken";
+import { getToken } from "@/service/getToken.js";
 
-// const busAdvancedAPI = async () => {
-//   console.log("hi");
-//   await getToken;
-//   return axios.create({
-//     baseURL: "https://tdx.transportdata.tw/api/advanced/v2/Bus",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
+async function getAPIS() {
+  await getToken();
+  console.log(getToken());
+  //產生發API實例
+  const busAdvancedAPI = axios.create({
+    baseURL: "https://tdx.transportdata.tw/api/advanced/v2/Bus",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
 
-//       //API認證token
-//       //todo token 產生速度太慢,axios實例拿不到 -- promise / callback
-//       Authorization: `Bearer ${getToken.access_token}`,
-//       //舊版加密函式
-//       // ...getAuthorizationHeader(),
-//     },
-//   });
-// };
-// busAdvancedAPI()
+      //API認證token
+      Authorization: `Bearer ${getToken()}`,
+      //舊版加密函式
+      // ...getAuthorizationHeader(),
+    },
+  });
+  console.log(busAdvancedAPI);
+}
+getAPIS();
+
 let diedToken =
-  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NjAxODYwMDcsImlhdCI6MTY2MDA5OTYwNywianRpIjoiZWM1NWNjOTQtNmY2My00OTE3LTgxYjUtYjg3ZTc1NmFiNTcyIiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.d2peirhhwIyNKeHzUzg3OD0LrJPqdAOkvwqqdCRvafXGybx3TygLGhdhAyFyrkVRv8VQSbyBDD3HNoQZWb1nmoQ56wLv7sGmR-oXHper_23IRiQV1yZDFeGrE8-gceXTRAH2ZQOn5TEGh1WR6xSN5zIcmFdKWPG4b8-72j1KG2idmxsAGsr5VKWgAIUpc91Nk8pweiRiKfZHMz8eMdy6bIWjFciD8mXzh_KzjEVnsGczNm9UdUlrTEQcebU1kvx7nsxsFBt2pERWlrKtzUvPRQeQHC5NSvzmiGILa-MJL8QeD4RpHAv14NkMyBv4nFoaYe5uc1zkAZ8WqFbjn52UKQ";
+  "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJER2lKNFE5bFg4WldFajlNNEE2amFVNm9JOGJVQ3RYWGV6OFdZVzh3ZkhrIn0.eyJleHAiOjE2NjAyNzM2OTQsImlhdCI6MTY2MDE4NzI5NCwianRpIjoiY2M2MjExMzEtYzBmZi00MDQ0LThlYTktMjRlZjk2MmNjN2M1IiwiaXNzIjoiaHR0cHM6Ly90ZHgudHJhbnNwb3J0ZGF0YS50dy9hdXRoL3JlYWxtcy9URFhDb25uZWN0Iiwic3ViIjoiM2U1Yzk2ODQtODUyMi00ZjhkLWFjZGYtOTY5YWU0Y2E4NDQyIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYW5keXplbmc5MDAtMzk1MGJhY2ItNWVmNi00YTMyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJzdGF0aXN0aWMiLCJwcmVtaXVtIiwibWFhcyIsImFkdmFuY2VkIiwiaGlzdG9yaWNhbCIsImJhc2ljIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJ1c2VyIjoiY2FjYTk4NzUifQ.YZuFWafJgpFatu8CEbC_lWYpVoxqV8wXGACHfTrd5xU29mariVmSXY1UHfAgYpp5uLXUwjOsVHpGiMrXpN9uejnshdgeXwMsqoS-1HjzAxiDGhXF81G74DDQj8-uV_kZfiKet9q-bEIq-n10WqXdnoJ-74DEBmAb1X7bUqVD1uRvykt3ik3JpGoYTJB8tgzZ1TUfLiOxOhOL1CBrhijIF-eCfn5_Wg1vHjExw8NbeVjlNOJDDMXVT8C13Myz591P3gbyBWlsAWmUqpbGtcvxNL-z59LhF1gwS68--FLYibmTcnyhpgHLYbNZZhvl9tq0DhFGGHinhsKo9t-v_ruKiA";
 
 const busAdvancedAPI = axios.create({
   baseURL: "https://tdx.transportdata.tw/api/advanced/v2/Bus",
